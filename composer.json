@@ -1,0 +1,47 @@
+{
+    "name": "zachgilbert97/transglobal-express-php",
+    "description": "An unofficial PHP SDK for the Transglobal Express API",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "api",
+        "sdk",
+        "shipping"
+    ],
+    "homepage": "https://github.com/zachgilbert97/transglobal-express-php",
+    "authors": [
+        {
+            "name": "Zach Gilbert"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.1",
+        "psr/http-message": "^2.0",
+        "guzzlehttp/guzzle": "^7.9",
+        "guzzlehttp/psr7": "^2.8"
+    },
+    "require-dev": {
+        "pestphp/pest": "^4.0",
+        "phpstan/phpstan": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.80"
+    },
+    "autoload": {
+        "psr-4": {
+            "ZachGilbert\\TransglobalExpress\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZachGilbert\\TransglobalExpress\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
