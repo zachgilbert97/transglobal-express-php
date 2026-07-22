@@ -1,5 +1,5 @@
 {
-    "name": "zachgilbert97/transglobal-express-php",
+    "name": "zachgilbert/transglobal-express-php",
     "description": "An unofficial PHP SDK for the Transglobal Express API",
     "type": "library",
     "license": "MIT",

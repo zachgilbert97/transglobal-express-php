@@ -25,10 +25,8 @@ class Quote
      */
     public function get(Shipment $shipment, Insurance $insurance): GetQuoteResponse
     {
-        $response = $this->client->send(new GetQuoteRequest($shipment, $insurance));
-
-        $data = json_decode((string) $response->getBody(), true, JSON_THROW_ON_ERROR);
-
-        return GetQuoteResponse::fromArray($data);
+        return GetQuoteResponse::fromArray(
+            $this->client->send(new GetQuoteRequest($shipment, $insurance))
+        );
     }
 }

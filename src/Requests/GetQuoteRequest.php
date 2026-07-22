@@ -20,7 +20,7 @@ class GetQuoteRequest implements Request
 
     public function method(): string
     {
-        return 'GET';
+        return 'POST';
     }
 
     public function uri(): string

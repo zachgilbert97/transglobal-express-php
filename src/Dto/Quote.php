@@ -11,10 +11,9 @@ final class Quote implements Arrayable
      * @param ServiceQuoteResult[]|null $serviceResults
      */
     public function __construct(
-        readonly public ?int   $quoteId = null,
-        readonly public ?array $serviceResults = null,
-    )
-    {
+        public readonly ?int   $quoteId = null,
+        public readonly ?array $serviceResults = null,
+    ) {
     }
 
     public function toArray(): array
