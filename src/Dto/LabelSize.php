@@ -3,16 +3,20 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
 use ZachGilbert\TransglobalExpress\Enums\LabelSize as LabelSizeEnum;
+use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
 
 final class LabelSize implements Arrayable
 {
     use UnwrapsEnums;
 
+    /**
+     * @param LabelSizeEnum|string|null $size
+     */
     public function __construct(
-        readonly public LabelSizeEnum|string|null $size = null,
-    ) {}
+        public readonly LabelSizeEnum|string|null $size = null,
+    ) {
+    }
 
     public function toArray(): array
     {

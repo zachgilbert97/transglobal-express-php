@@ -18,6 +18,7 @@ use ZachGilbert\TransglobalExpress\Exceptions\{
     ValidationException,
 };
 use ZachGilbert\TransglobalExpress\Resources\Quote;
+use ZachGilbert\TransglobalExpress\Resources\Shipment;
 
 final class Client
 {
@@ -165,5 +166,13 @@ final class Client
     public function quote(): Quote
     {
         return new Quote($this);
+    }
+
+    /**
+     * @return Shipment
+     */
+    public function shipment(): Shipment
+    {
+        return new Shipment($this);
     }
 }

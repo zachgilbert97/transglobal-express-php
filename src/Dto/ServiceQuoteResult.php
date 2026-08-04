@@ -48,7 +48,7 @@ final class ServiceQuoteResult implements Arrayable
     public function toArray(): array
     {
         return array_filter([
-            'ServiceId' => $this->serviceId,
+            'ServiceID' => $this->serviceId,
             'ServiceName' => $this->serviceName,
             'CarrierName' => $this->carrierName,
             'ChargeableWeight' => $this->chargeableWeight,
@@ -68,7 +68,7 @@ final class ServiceQuoteResult implements Arrayable
     public static function fromArray(array $data): static
     {
         return new self(
-            serviceId: $data['ServiceId'] ?? null,
+            serviceId: $data['ServiceID'] ?? null,
             serviceName: $data['ServiceName'] ?? null,
             carrierName: $data['CarrierName'] ?? null,
             chargeableWeight: $data['ChargeableWeight'] ?? null,
