@@ -8,6 +8,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use ZachGilbert\TransglobalExpress\Concerns\Request;
 use ZachGilbert\TransglobalExpress\Dto\Credentials;
 use ZachGilbert\TransglobalExpress\Exceptions\{
@@ -17,6 +18,7 @@ use ZachGilbert\TransglobalExpress\Exceptions\{
     UnauthenticatedException,
     ValidationException,
 };
+use ZachGilbert\TransglobalExpress\Dto\Notification;
 use ZachGilbert\TransglobalExpress\Resources\Quote;
 use ZachGilbert\TransglobalExpress\Resources\Shipment;
 
@@ -26,20 +28,23 @@ final class Client
      * @param ClientInterface         $http
      * @param RequestFactoryInterface $requestFactory
      * @param Config                  $config
+     * @param LoggerInterface|null    $logger
      */
     public function __construct(
         private readonly ClientInterface         $http,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly Config                  $config,
+        private readonly ?LoggerInterface        $logger = null,
     ) {
     }
 
     /**
-     * @param Config $config
+     * @param Config               $config
+     * @param LoggerInterface|null $logger
      *
      * @return self
      */
-    public static function make(Config $config): self
+    public static function make(Config $config, ?LoggerInterface $logger = null): self
     {
         return new self(
             http: new \GuzzleHttp\Client([
@@ -48,6 +53,7 @@ final class Client
             ]),
             requestFactory: new HttpFactory(),
             config: $config,
+            logger: $logger,
         );
     }
 
@@ -80,11 +86,25 @@ final class Client
             );
         }
 
-        if ($response->getStatusCode() >= 400) {
-            $this->throwForResponse($response);
+        if (!is_null($this->logger)) {
+            $this->logger->debug((string) $response->getBody(), [
+                'endpoint' => $apiRequest->uri(),
+                'method' => $apiRequest->method(),
+                'status' => $response->getStatusCode(),
+            ]);
         }
 
-        return $this->decodeBody($response);
+        if ($response->getStatusCode() >= 400) {
+            $this->throwForHttpStatus($response);
+        }
+
+        $decoded = $this->decodeBody($response);
+
+        if (array_key_exists('Status', $decoded) && $decoded['Status'] === 'FAIL') { // TODO - Enum
+            $this->throwForBodyStatus($response);
+        }
+
+        return $decoded;
     }
 
     /**
@@ -130,7 +150,7 @@ final class Client
      *
      * @return never
      */
-    private function throwForResponse(ResponseInterface $response): never
+    private function throwForHttpStatus(ResponseInterface $response): never
     {
         $status = $response->getStatusCode();
         $raw = (string) $response->getBody();
@@ -158,6 +178,47 @@ final class Client
             422 => new ValidationException($message, $status, $body),
             default => new ApiException($message, $status, $body),
         };
+    }
+
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return never
+     */
+    private function throwForBodyStatus(ResponseInterface $response): never
+    {
+        $raw = (string) $response->getBody();
+
+        try {
+            $body = json_decode($raw, true, flags: JSON_THROW_ON_ERROR);
+            $body = is_array($body) ? $body : ['raw_body' => $raw];
+        } catch (JsonException) {
+            // Error response wasn't JSON at all (HTML error page, plain text, empty body)
+            $body = ['raw_body' => $raw];
+        }
+
+        $message = '';
+
+        if (array_key_exists('Status', $body) && is_string($body['Status'])) {
+            $message .= "[{$body['Status']}] ";
+        }
+
+        if (array_key_exists('Notifications', $body) && is_array($body['Notifications'])) {
+            $notifications = array_map(
+                fn ($notification): Notification => Notification::fromArray($notification),
+                $body['Notifications'],
+            );
+
+            $messages = [];
+
+            foreach ($notifications as $notification) {
+                $messages[] = $notification->message;
+            }
+
+            $message .= !empty($messages) ? implode('; ', $messages) : 'Something went wrong.';
+        }
+
+        throw new ApiException($message, 400, $body);
     }
 
     /**
