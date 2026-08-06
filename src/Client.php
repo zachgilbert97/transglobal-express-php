@@ -70,12 +70,12 @@ final class Client
             ->createRequest($apiRequest->method(), $apiRequest->uri())
             ->withHeader('Content-Type', 'application/json');
 
-        $request->getBody()->write(
-            json_encode([
-                'Credentials' => (new Credentials($this->config->apiKey, $this->config->password))->toArray(),
-                ...$apiRequest->body(),
-            ], JSON_THROW_ON_ERROR)
-        );
+        $requestBody = json_encode([
+            'Credentials' => (new Credentials($this->config->apiKey, $this->config->password))->toArray(),
+            ...$apiRequest->body(),
+        ], JSON_THROW_ON_ERROR);
+
+        $request->getBody()->write($requestBody);
 
         try {
             $response = $this->http->sendRequest($request);
@@ -87,10 +87,16 @@ final class Client
         }
 
         if (!is_null($this->logger)) {
-            $this->logger->debug((string) $response->getBody(), [
-                'endpoint' => $apiRequest->uri(),
-                'method' => $apiRequest->method(),
-                'status' => $response->getStatusCode(),
+            $this->logger->debug("Transglobal Express {$this->config->environment->value} API request", [
+                'request' => [
+                    'endpoint' => $apiRequest->uri(),
+                    'method' => $apiRequest->method(),
+                    'body' => $requestBody,
+                ],
+                'response' => [
+                    'status' => $response->getStatusCode(),
+                    'body' => $response->getBody(),
+                ],
             ]);
         }
 
