@@ -18,6 +18,9 @@ final class LabelSize implements Arrayable
     ) {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -25,10 +28,17 @@ final class LabelSize implements Arrayable
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
-            size: isset($data['Size']) ? LabelSizeEnum::from($data['Size']) : null,
+            size: isset($data['Size'])
+                ? (LabelSizeEnum::tryFrom($data['Size']) ?: $data['Size'])
+                : null,
         );
     }
 }

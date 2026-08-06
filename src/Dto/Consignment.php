@@ -29,6 +29,9 @@ final class Consignment implements Arrayable
     {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -41,14 +44,23 @@ final class Consignment implements Arrayable
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
-            itemType: isset($data['ItemType']) ? ItemType::from($data['ItemType']) : null,
+            itemType: isset($data['ItemType'])
+                ? (ItemType::tryFrom($data['ItemType']) ?: $data['ItemType'])
+                : null,
             itemsAreStackable: $data['ItemsAreStackable'] ?? null,
             consignmentSummary: $data['ConsignmentSummary'] ?? null,
             consignmentValue: $data['ConsignmentValue'] ?? null,
-            consignmentCurrency: isset($data['ConsignmentCurrency']) ? ConsignmentCurrency::fromArray($data['ConsignmentCurrency']) : null,
+            consignmentCurrency: isset($data['ConsignmentCurrency'])
+                ? ConsignmentCurrency::fromArray($data['ConsignmentCurrency'])
+                : null,
             packages: isset($data['Packages'])
                 ? array_map(
                     fn ($package): Package => Package::fromArray($package),

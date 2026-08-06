@@ -39,12 +39,21 @@ final class ExpectedLabel implements Arrayable
         ], static fn($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
-            labelRole: isset($data['LabelRole']) ? LabelRole::from($data['LabelRole']) : null,
+            labelRole: isset($data['LabelRole'])
+                ? (LabelRole::tryFrom($data['LabelRole']) ?: $data['LabelRole'])
+                : null,
             labelFormat: $data['LabelFormat'] ?? null,
-            labelGenerateStatus: isset($data['LabelGenerateStatus']) ? LabelGenerateStatus::from($data['LabelGenerateStatus']) : null,
+            labelGenerateStatus: isset($data['LabelGenerateStatus'])
+                ? (LabelGenerateStatus::tryFrom($data['LabelGenerateStatus']) ?: $data['LabelGenerateStatus'])
+                : null,
             availableSizes: $data['AvailableSizes'] ?? null,
         );
     }

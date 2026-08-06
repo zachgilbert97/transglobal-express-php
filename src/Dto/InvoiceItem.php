@@ -5,11 +5,18 @@ namespace ZachGilbert\TransglobalExpress\Dto;
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class InvoiceItem implements Arrayable {
+    /**
+     * @param string|null $itemDescription
+     * @param float|null  $amountNet
+     */
     public function __construct(
         readonly public ?string $itemDescription = null,
         readonly public ?float $amountNet = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -18,6 +25,11 @@ final class InvoiceItem implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

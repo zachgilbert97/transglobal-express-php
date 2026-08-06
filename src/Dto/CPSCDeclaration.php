@@ -10,6 +10,20 @@ use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
 final class CPSCDeclaration implements Arrayable {
     use UnwrapsEnums;
 
+    /**
+     * @param DeclarationOption|int|null     $declarationOption
+     * @param string|null                    $productId
+     * @param string|null                    $cpscRuleCitation
+     * @param string|null                    $dateOfManufacture
+     * @param string|null                    $placeOfManufacture
+     * @param string|null                    $dateOfMostRecentTest
+     * @param string|null                    $testingLaboratory
+     * @param string|null                    $recordsKeeperContact
+     * @param string|null                    $certifierId
+     * @param string|null                    $versionId
+     * @param CPSCDisclaimerType|string|null $disclaimerType
+     * @param string|null                    $intendedUseCode
+     */
     public function __construct(
         readonly public DeclarationOption|int|null $declarationOption = null,
         readonly public ?string $productId = null,
@@ -25,6 +39,9 @@ final class CPSCDeclaration implements Arrayable {
         readonly public ?string $intendedUseCode = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -43,10 +60,17 @@ final class CPSCDeclaration implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
-            declarationOption: isset($data['DeclarationOption']) ? DeclarationOption::from($data['DeclarationOption']) : null,
+            declarationOption: isset($data['DeclarationOption'])
+                ? (DeclarationOption::tryFrom($data['DeclarationOption']) ?: $data['DeclarationOption'])
+                : null,
             productId: $data['ProductId'] ?? null,
             cpscRuleCitation: $data['CPSCRuleCitation'] ?? null,
             dateOfManufacture: $data['DateOfManufacture'] ?? null,
@@ -56,7 +80,9 @@ final class CPSCDeclaration implements Arrayable {
             recordsKeeperContact: $data['RecordsKeeperContact'] ?? null,
             certifierId: $data['CertifierId'] ?? null,
             versionId: $data['VersionId'] ?? null,
-            disclaimerType: isset($data['DisclaimerType']) ? CPSCDisclaimerType::from($data['DisclaimerType']) : null,
+            disclaimerType: isset($data['DisclaimerType'])
+                ? (CPSCDisclaimerType::tryFrom($data['DisclaimerType']) ?: $data['DisclaimerType'])
+                : null,
             intendedUseCode: $data['IntendedUseCode'] ?? null,
         );
     }

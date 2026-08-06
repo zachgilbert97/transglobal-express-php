@@ -23,6 +23,9 @@ final class Package implements Arrayable
     {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -31,9 +34,14 @@ final class Package implements Arrayable
             'Width' => $this->width,
             'Height' => $this->height,
             'CommodityDetails' => $this->commodityDetails,
-        ], static fn($value): bool => $value !== null);
+        ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
@@ -43,7 +51,7 @@ final class Package implements Arrayable
             height: $data['Height'] ?? null,
             commodityDetails: isset($data['CommodityDetails'])
                 ? array_map(
-                    fn($commodityLine): CommodityLine => CommodityLine::fromArray($commodityLine),
+                    fn ($commodityLine): CommodityLine => CommodityLine::fromArray($commodityLine),
                     $data['CommodityDetails'],
                 )
                 : null,

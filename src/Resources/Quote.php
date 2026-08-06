@@ -6,7 +6,9 @@ use JsonException;
 use ZachGilbert\TransglobalExpress\Client;
 use ZachGilbert\TransglobalExpress\Dto\Insurance;
 use ZachGilbert\TransglobalExpress\Dto\Shipment;
+use ZachGilbert\TransglobalExpress\Requests\GetQuoteMinimalRequest;
 use ZachGilbert\TransglobalExpress\Requests\GetQuoteRequest;
+use ZachGilbert\TransglobalExpress\Responses\GetQuoteMinimalResponse;
 use ZachGilbert\TransglobalExpress\Responses\GetQuoteResponse;
 
 class Quote
@@ -27,6 +29,19 @@ class Quote
     {
         return GetQuoteResponse::fromArray(
             $this->client->send(new GetQuoteRequest($shipment, $insurance))
+        );
+    }
+
+    /**
+     * @param Shipment $shipment
+     *
+     * @return GetQuoteMinimalResponse
+     * @throws JsonException
+     */
+    public function getMinimal(Shipment $shipment): GetQuoteMinimalResponse
+    {
+        return GetQuoteMinimalResponse::fromArray(
+            $this->client->Send(new GetQuoteMinimalRequest($shipment))
         );
     }
 }

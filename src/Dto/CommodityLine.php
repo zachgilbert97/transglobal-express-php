@@ -6,6 +6,17 @@ use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class CommodityLine implements Arrayable
 {
+    /**
+     * @param string|null          $commodityCode
+     * @param string|null          $commodityDescription
+     * @param Country|null         $countryOfOrigin
+     * @param int|null             $numberOfUnits
+     * @param float|null           $unitValue
+     * @param float|null           $unitWeight
+     * @param string|null          $productCode
+     * @param Address|null         $manufacturerAddress
+     * @param CPSCDeclaration|null $cpscDeclaration
+     */
     public function __construct(
         readonly public ?string $commodityCode = null,
         readonly public ?string $commodityDescription = null,
@@ -20,6 +31,9 @@ final class CommodityLine implements Arrayable
     {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -35,6 +49,11 @@ final class CommodityLine implements Arrayable
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

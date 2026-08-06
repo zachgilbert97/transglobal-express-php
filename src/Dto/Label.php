@@ -30,6 +30,9 @@ final class Label implements Arrayable {
         readonly public ?string $serviceName = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -44,12 +47,19 @@ final class Label implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
             labelRole: $data['LabelRole'] ?? null,
             labelFormat: $data['LabelFormat'] ?? null,
-            labelSize: isset($data['LabelSize']) ? LabelSizeEnum::from($data['LabelSize']) : null,
+            labelSize: isset($data['LabelSize'])
+                ? (LabelSizeEnum::tryFrom($data['LabelSize']) ?: $data['LabelSize'])
+                : null,
             airWaybillReference: $data['AirWaybillReference'] ?? null,
             labelContent: $data['LabelContent'] ?? null,
             downloadUrl: $data['DownloadURL'] ?? null,

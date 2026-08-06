@@ -16,6 +16,9 @@ final class Collection implements Arrayable {
         readonly public ?int $collectionOptionId = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -25,6 +28,11 @@ final class Collection implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

@@ -19,6 +19,9 @@ final class ConsignmentCurrency implements Arrayable
     {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -26,10 +29,17 @@ final class ConsignmentCurrency implements Arrayable
         ], static fn($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
-            currencyCode: isset($data['CurrencyCode']) ? Currency::from($data['CurrencyCode']) : null,
+            currencyCode: isset($data['CurrencyCode'])
+                ? (Currency::tryFrom($data['CurrencyCode']) ?: $data['CurrencyCode'])
+                : null,
         );
     }
 }

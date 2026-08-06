@@ -8,6 +8,12 @@ use ZachGilbert\TransglobalExpress\Dto\ServiceQuoteResult;
 
 final class GetQuoteResponse implements Response
 {
+    /**
+     * @param string|null                    $status
+     * @param array<Notification>|null       $notifications
+     * @param int|null                       $quoteId
+     * @param array<ServiceQuoteResult>|null $serviceResults
+     */
     public function __construct(
         public readonly ?string $status = null, // TODO - Enum
         public readonly ?array $notifications = null,
@@ -15,6 +21,11 @@ final class GetQuoteResponse implements Response
         public readonly ?array $serviceResults = null,
     ) {}
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

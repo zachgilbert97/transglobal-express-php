@@ -14,6 +14,9 @@ final class Notification implements Arrayable {
         public readonly ?string $severity = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -22,6 +25,11 @@ final class Notification implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

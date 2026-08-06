@@ -45,6 +45,9 @@ final class ServiceQuoteResult implements Arrayable
     {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -65,6 +68,11 @@ final class ServiceQuoteResult implements Arrayable
         ], static fn($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
@@ -81,7 +89,9 @@ final class ServiceQuoteResult implements Arrayable
             signatureRequiredAvailable: $data['SignatureRequiredAvailable'] ?? null,
             expectedLabels: $data['ExpectedLabels'] ?? null,
             collectionOptions: $data['CollectionOptions'] ?? null,
-            serviceType: ServiceType::from($data['ServiceType']) ?? null,
+            serviceType: isset($data['ServiceType'])
+                ? (ServiceType::tryFrom($data['ServiceType']) ?: $data['ServiceType'])
+                : null,
         );
     }
 }

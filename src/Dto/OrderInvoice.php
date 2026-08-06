@@ -6,10 +6,10 @@ use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class OrderInvoice implements Arrayable {
     /**
-     * @param string|null $invoiceReference
-     * @param float|null $totalNet
-     * @param float|null $tax
-     * @param float|null $totalGross
+     * @param string|null             $invoiceReference
+     * @param float|null              $totalNet
+     * @param float|null              $tax
+     * @param float|null              $totalGross
      * @param array<InvoiceItem>|null $invoiceItems
      */
     public function __construct(
@@ -20,6 +20,9 @@ final class OrderInvoice implements Arrayable {
         readonly public ?array $invoiceItems = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -31,6 +34,10 @@ final class OrderInvoice implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

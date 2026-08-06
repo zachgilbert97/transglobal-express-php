@@ -6,6 +6,10 @@ use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class Credentials implements Arrayable
 {
+    /**
+     * @param string $apiKey
+     * @param string $password
+     */
     public function __construct(
         readonly public string $apiKey,
         readonly public string $password,
@@ -13,6 +17,9 @@ final class Credentials implements Arrayable
     {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return [
@@ -21,6 +28,11 @@ final class Credentials implements Arrayable
         ];
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

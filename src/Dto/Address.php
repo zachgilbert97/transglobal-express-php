@@ -5,6 +5,23 @@ namespace ZachGilbert\TransglobalExpress\Dto;
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class Address implements Arrayable {
+    /**
+     * @param string|null  $forename
+     * @param string|null  $surname
+     * @param string|null  $emailAddress
+     * @param string|null  $telephoneNumber
+     * @param string|null  $mobileNumber
+     * @param string|null  $companyName
+     * @param string|null  $addressLineOne
+     * @param string|null  $addressLineTwo
+     * @param string|null  $city
+     * @param string|null  $county
+     * @param string|null  $postcode
+     * @param Country|null $country
+     * @param bool|null    $isAddressResidential
+     * @param bool|null    $eoriNumber
+     * @param string|null  $vatNumber
+     */
     public function __construct(
         readonly public ?string $forename = null,
         readonly public ?string $surname = null,
@@ -23,6 +40,9 @@ final class Address implements Arrayable {
         readonly public ?string $vatNumber = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -44,6 +64,11 @@ final class Address implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

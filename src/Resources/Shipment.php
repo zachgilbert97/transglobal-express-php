@@ -12,6 +12,9 @@ use ZachGilbert\TransglobalExpress\Responses\BookShipmentResponse;
 
 class Shipment
 {
+    /**
+     * @param Client $client
+     */
     public function __construct(
         private readonly Client $client,
     ) {

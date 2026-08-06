@@ -28,6 +28,9 @@ final class BookDetails implements Arrayable {
         readonly public ?string $deliveryInstructions = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -43,20 +46,25 @@ final class BookDetails implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
             serviceId: $data['ServiceId'] ?? null,
             yourReference: $data['YourReference'] ?? null,
             shippingCharges: $data['ShippingCharges'] ?? null,
-            collection: isset($data['Collection']) ? Collection::fromArray($data['Collection']) : null,
-            bookAccessories: isset($data['BookAccessories'])
-                ? array_map(
-                    fn ($bookAccessory): BookAccessory => BookAccessory:: fromArray($bookAccessory),
-                    $data['BookAccessories'],
-                )
-                : null,
-            insurance: isset($data['Insurance']) ? Insurance::fromArray($data['Insurance']) : null,
+//            collection: isset($data['Collection']) ? Collection::fromArray($data['Collection']) : null,
+//            bookAccessories: isset($data['BookAccessories'])
+//                ? array_map(
+//                    fn ($bookAccessory): BookAccessory => BookAccessory:: fromArray($bookAccessory),
+//                    $data['BookAccessories'],
+//                )
+//                : null,
+//            insurance: isset($data['Insurance']) ? Insurance::fromArray($data['Insurance']) : null,
             deliveryInstructions: $data['DeliveryInstructions'] ?? null,
         );
     }

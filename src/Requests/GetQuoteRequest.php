@@ -18,16 +18,25 @@ class GetQuoteRequest implements Request
     ) {
     }
 
+    /**
+     * @return string
+     */
     public function method(): string
     {
         return 'POST';
     }
 
+    /**
+     * @return string
+     */
     public function uri(): string
     {
         return '/Quote/V2/GetQuote';
     }
 
+    /**
+     * @return array
+     */
     public function body(): array
     {
         return [

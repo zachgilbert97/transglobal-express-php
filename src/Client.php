@@ -19,6 +19,7 @@ use ZachGilbert\TransglobalExpress\Exceptions\{
     ValidationException,
 };
 use ZachGilbert\TransglobalExpress\Dto\Notification;
+use ZachGilbert\TransglobalExpress\Resources\Countries;
 use ZachGilbert\TransglobalExpress\Resources\Quote;
 use ZachGilbert\TransglobalExpress\Resources\Shipment;
 
@@ -241,5 +242,13 @@ final class Client
     public function shipment(): Shipment
     {
         return new Shipment($this);
+    }
+
+    /**
+     * @return Countries
+     */
+    public function countries(): Countries
+    {
+        return new Countries($this);
     }
 }

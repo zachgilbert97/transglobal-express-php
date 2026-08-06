@@ -5,10 +5,16 @@ namespace ZachGilbert\TransglobalExpress\Dto;
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class QuoteSelection implements Arrayable {
+    /**
+     * @param int|null $quoteId
+     */
     public function __construct(
         readonly public ?int $quoteId = null,
     ) {}
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -16,6 +22,11 @@ final class QuoteSelection implements Arrayable {
         ], static fn ($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(

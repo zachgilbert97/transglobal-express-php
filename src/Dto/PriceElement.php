@@ -6,6 +6,11 @@ use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class PriceElement implements Arrayable
 {
+    /**
+     * @param string|null $code
+     * @param string|null $description
+     * @param float|null  $cost
+     */
     public function __construct(
         readonly public ?string $code = null,
         readonly public ?string $description = null,
@@ -14,6 +19,9 @@ final class PriceElement implements Arrayable
     {
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -23,6 +31,11 @@ final class PriceElement implements Arrayable
         ], static fn($value): bool => $value !== null);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
