@@ -10,8 +10,8 @@ use ZachGilbert\TransglobalExpress\Dto\Shipment;
 class BookShipmentRequest implements Request
 {
     /**
-     * @param Shipment|QuoteSelection $shipment - A new shipment, optionally from a pre-made quote
-     * @param BookDetails $bookDetails
+     * @param Shipment|QuoteSelection $shipment A new shipment, optionally from a pre-made quote
+     * @param BookDetails             $bookDetails
      */
     public function __construct(
         protected Shipment|QuoteSelection $shipment,

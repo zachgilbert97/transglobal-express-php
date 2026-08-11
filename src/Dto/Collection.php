@@ -6,8 +6,8 @@ use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 
 final class Collection implements Arrayable {
     /**
-     * @param string|null $collectionDate Y-m-d, e.g. 2020-12-31
-     * @param string|null $readyFrom H:m, e.g. 12:30
+     * @param string|null $collectionDate The collection date. Y-m-d, e.g. 2020-12-31
+     * @param string|null $readyFrom The time from which the consignment will be ready or collection. H:m, e.g. 12:30
      * @param int|null    $collectionOptionId
      */
     public function __construct(

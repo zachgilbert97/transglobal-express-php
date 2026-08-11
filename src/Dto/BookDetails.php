@@ -10,22 +10,22 @@ final class BookDetails implements Arrayable {
      * @param string|null               $yourReference
      * @param string|null               $iossNumber
      * @param bool|null                 $includePreferredOriginNoticeOnPackingList
-//     * @param Collection|null           $collection
-//     * @param array<BookAccessory>|null $bookAccessories
-//     * @param Insurance|null            $insurance
      * @param float|null                $shippingCharges
      * @param string|null               $deliveryInstructions
+     * @param Collection|null           $collection
+     * @param array<BookAccessory>|null $bookAccessories
+     * @param Insurance|null            $insurance
      */
     public function __construct(
         readonly public ?int $serviceId = null,
         readonly public ?string $yourReference = null,
         readonly public ?string $iossNumber = null,
         readonly public ?bool $includePreferredOriginNoticeOnPackingList = null,
-//        readonly public ?Collection $collection = null,
-//        readonly public ?array $bookAccessories = null,
-//        readonly public ?Insurance $insurance = null,
-        readonly public ?float $shippingCharges = null,
         readonly public ?string $deliveryInstructions = null,
+        readonly public ?float $shippingCharges = null,
+        readonly public ?Collection $collection = null,
+        readonly public ?array $bookAccessories = null,
+        readonly public ?Insurance $insurance = null,
     ) {}
 
     /**
@@ -38,11 +38,11 @@ final class BookDetails implements Arrayable {
             'YourReference' => $this->yourReference,
             'IOSSNumber' => $this->iossNumber,
             'IncludePreferredOriginNoticeOnPackingList' => $this->includePreferredOriginNoticeOnPackingList,
-//            'Collection' => $this->collection?->toArray(),
-//            'BookAccessories' => $this->bookAccessories,
-//            'Insurance' => $this->insurance?->toArray(),
             'ShippingCharges' => $this->shippingCharges,
             'DeliveryInstructions' => $this->deliveryInstructions,
+            'Collection' => $this->collection?->toArray(),
+            'BookAccessories' => $this->bookAccessories,
+            'Insurance' => $this->insurance?->toArray(),
         ], static fn ($value): bool => $value !== null);
     }
 
@@ -56,16 +56,18 @@ final class BookDetails implements Arrayable {
         return new self(
             serviceId: $data['ServiceId'] ?? null,
             yourReference: $data['YourReference'] ?? null,
-            shippingCharges: $data['ShippingCharges'] ?? null,
-//            collection: isset($data['Collection']) ? Collection::fromArray($data['Collection']) : null,
-//            bookAccessories: isset($data['BookAccessories'])
-//                ? array_map(
-//                    fn ($bookAccessory): BookAccessory => BookAccessory:: fromArray($bookAccessory),
-//                    $data['BookAccessories'],
-//                )
-//                : null,
-//            insurance: isset($data['Insurance']) ? Insurance::fromArray($data['Insurance']) : null,
+            iossNumber: $data['IOSSNumber'] ?? null,
+            includePreferredOriginNoticeOnPackingList: $data['IncludePreferredOriginNoticeOnPackingList'] ?? null,
             deliveryInstructions: $data['DeliveryInstructions'] ?? null,
+            shippingCharges: $data['ShippingCharges'] ?? null,
+            collection: isset($data['Collection']) ? Collection::fromArray($data['Collection']) : null,
+            bookAccessories: isset($data['BookAccessories'])
+                ? array_map(
+                    fn ($bookAccessory): BookAccessory => BookAccessory:: fromArray($bookAccessory),
+                    $data['BookAccessories'],
+                )
+                : null,
+            insurance: isset($data['Insurance']) ? Insurance::fromArray($data['Insurance']) : null,
         );
     }
 }
