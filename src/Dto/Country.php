@@ -25,7 +25,7 @@ final class Country implements Arrayable {
             'CountryId' => $this->countryId,
             'Title' => $this->title,
             'CountryCode' => $this->countryCode,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

@@ -41,9 +41,11 @@ final class BookDetails implements Arrayable {
             'ShippingCharges' => $this->shippingCharges,
             'DeliveryInstructions' => $this->deliveryInstructions,
             'Collection' => $this->collection?->toArray(),
-            'BookAccessories' => $this->bookAccessories,
+            'BookAccessories' => !is_null($this->bookAccessories)
+                ? array_map(static fn ($accessory): array => $accessory->toArray(), $this->bookAccessories)
+                : null,
             'Insurance' => $this->insurance?->toArray(),
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**
@@ -63,7 +65,7 @@ final class BookDetails implements Arrayable {
             collection: isset($data['Collection']) ? Collection::fromArray($data['Collection']) : null,
             bookAccessories: isset($data['BookAccessories'])
                 ? array_map(
-                    fn ($bookAccessory): BookAccessory => BookAccessory:: fromArray($bookAccessory),
+                    static fn ($bookAccessory): BookAccessory => BookAccessory::fromArray($bookAccessory),
                     $data['BookAccessories'],
                 )
                 : null,

@@ -19,7 +19,7 @@ final class BookAccessory implements Arrayable {
     {
         return array_filter([
             'Code' => $this->code,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

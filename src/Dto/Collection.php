@@ -25,7 +25,7 @@ final class Collection implements Arrayable {
             'CollectionDate' => $this->collectionDate,
             'ReadyFrom' => $this->readyFrom,
             'CollectionOptionID' => $this->collectionOptionId,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

@@ -30,8 +30,10 @@ final class OrderInvoice implements Arrayable {
             'TotalNet' => $this->totalNet,
             'Tax' => $this->tax,
             'TotalGross' => $this->totalGross,
-            'InvoiceItems' => $this->invoiceItems,
-        ], static fn ($value): bool => $value !== null);
+            'InvoiceItems' => !is_null($this->invoiceItems)
+                ? array_map(static fn ($item): array => $item->toArray(), $this->invoiceItems)
+                : null,
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

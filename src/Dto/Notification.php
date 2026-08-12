@@ -22,7 +22,7 @@ final class Notification implements Arrayable {
         return array_filter([
             'Message' => $this->message,
             'Severity' => $this->severity,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

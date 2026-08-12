@@ -46,7 +46,7 @@ final class CommodityLine implements Arrayable
             'ProductCode' => $this->productCode,
             'ManufacturerAddress' => $this->manufacturerAddress?->toArray(),
             'CpscDeclaration' => $this->cpscDeclaration?->toArray(),
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

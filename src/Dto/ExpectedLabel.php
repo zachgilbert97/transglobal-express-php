@@ -35,7 +35,9 @@ final class ExpectedLabel implements Arrayable
             'LabelRole' => $this->unwrapEnumValue($this->labelRole),
             'LabelFormat' => $this->labelFormat,
             'LabelGenerateStatus' => $this->unwrapEnumValue($this->labelGenerateStatus),
-            'AvailableSizes' => $this->availableSizes,
+            'AvailableSizes' => !is_null($this->availableSizes)
+                ? array_map(static fn ($size): array => $size->toArray(), $this->availableSizes)
+                : null,
         ], static fn($value): bool => $value !== null);
     }
 
@@ -54,7 +56,9 @@ final class ExpectedLabel implements Arrayable
             labelGenerateStatus: isset($data['LabelGenerateStatus'])
                 ? (LabelGenerateStatus::tryFrom($data['LabelGenerateStatus']) ?: $data['LabelGenerateStatus'])
                 : null,
-            availableSizes: $data['AvailableSizes'] ?? null,
+            availableSizes: isset($data['AvailableSizes'])
+                ? array_map(static fn ($size): LabelSize => LabelSize::fromArray($size), $data['AvailableSizes'])
+                : null,
         );
     }
 }

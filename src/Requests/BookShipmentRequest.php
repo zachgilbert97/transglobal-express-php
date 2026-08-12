@@ -34,11 +34,11 @@ class BookShipmentRequest implements Request
      */
     public function body(): array
     {
-        return [
+        return array_filter([
             $this->shipment instanceof QuoteSelection
                 ? 'QuoteSelection'
                 : 'Shipment' => $this->shipment->toArray(),
             'BookDetails' => $this->bookDetails->toArray(),
-        ];
+        ], static fn ($value): bool => !is_null($value));
     }
 }

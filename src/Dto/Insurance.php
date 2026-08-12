@@ -28,7 +28,7 @@ final class Insurance implements Arrayable {
             'excessValue' => $this->excessValue,
             'goodsAreNew' => $this->goodsAreNew,
             'goodsAreFragile' => $this->goodsAreFragile,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

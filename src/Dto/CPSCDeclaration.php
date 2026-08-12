@@ -57,7 +57,7 @@ final class CPSCDeclaration implements Arrayable {
             'VersionId' => $this->versionId,
             'DisclaimerType' => $this->unwrapEnumValue($this->disclaimerType),
             'IntendedUseCode' => $this->intendedUseCode,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

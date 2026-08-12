@@ -19,7 +19,7 @@ final class QuoteSelection implements Arrayable {
     {
         return array_filter([
             'QuoteId' => $this->quoteId,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

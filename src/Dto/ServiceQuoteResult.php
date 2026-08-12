@@ -59,11 +59,19 @@ final class ServiceQuoteResult implements Arrayable
             'SameDayCollectionCutOffTime' => $this->sameDayCollectionCutOffTime,
             'IsWarehouseService' => $this->isWarehouseService,
             'TotalCost' => $this->totalCost?->toArray(),
-            'ServicePriceBreakdown' => $this->servicePriceBreakdown,
-            'OptionalExtras' => $this->optionalExtras,
+            'ServicePriceBreakdown' => !is_null($this->servicePriceBreakdown)
+                ? array_map(static fn ($price): array => $price->toArray(), $this->servicePriceBreakdown)
+                : null,
+            'OptionalExtras' => !is_null($this->optionalExtras)
+                ? array_map(static fn ($extra): array => $extra->toArray(), $this->optionalExtras)
+                : null,
             'SignatureRequiredAvailable' => $this->signatureRequiredAvailable,
-            'ExpectedLabels' => $this->expectedLabels,
-            'CollectionOptions' => $this->collectionOptions,
+            'ExpectedLabels' => !is_null($this->expectedLabels)
+                ? array_map(static fn ($label): array => $label->toArray(), $this->expectedLabels)
+                : null,
+            'CollectionOptions' => !is_null($this->collectionOptions)
+                ? array_map(static fn ($option): array => $option->toArray(), $this->collectionOptions)
+                : null,
             'ServiceType' => $this->unwrapEnumValue($this->serviceType),
         ], static fn($value): bool => $value !== null);
     }
@@ -84,11 +92,31 @@ final class ServiceQuoteResult implements Arrayable
             sameDayCollectionCutOffTime: $data['SameDayCollectionCutOffTime'] ?? null,
             isWarehouseService: $data['IsWarehouseService'] ?? null,
             totalCost: isset($data['TotalCost']) ? TotalCost::fromArray($data['TotalCost']) : null,
-            servicePriceBreakdown: $data['ServicePriceBreakdown'] ?? null,
-            optionalExtras: $data['OptionalExtras'] ?? null,
+            servicePriceBreakdown: isset($data['ServicePriceBreakdown'])
+                ? array_map(
+                    static fn ($price): PriceElement => PriceElement::fromArray($price),
+                    $data['ServicePriceBreakdown'],
+                )
+                : null,
+            optionalExtras: isset($data['OptionalExtras'])
+                ? array_map(
+                    static fn ($option): PriceElement => PriceElement::fromArray($option),
+                    $data['OptionalExtras'],
+                )
+                : null,
             signatureRequiredAvailable: $data['SignatureRequiredAvailable'] ?? null,
-            expectedLabels: $data['ExpectedLabels'] ?? null,
-            collectionOptions: $data['CollectionOptions'] ?? null,
+            expectedLabels: isset($data['ExpectedLabels'])
+                ? array_map(
+                    static fn ($label): ExpectedLabel => ExpectedLabel::fromArray($label),
+                    $data['ExpectedLabels'],
+                )
+                : null,
+            collectionOptions: isset($data['CollectionOptions'])
+                ? array_map(
+                    static fn ($option): ServiceResultCollectionOption => ServiceResultCollectionOption::fromArray($option),
+                    $data['CollectionOptions'],
+                )
+                : null,
             serviceType: isset($data['ServiceType'])
                 ? (ServiceType::tryFrom($data['ServiceType']) ?: $data['ServiceType'])
                 : null,

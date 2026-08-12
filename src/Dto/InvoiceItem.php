@@ -22,7 +22,7 @@ final class InvoiceItem implements Arrayable {
         return array_filter([
             'ItemDescription' => $this->itemDescription,
             'AmountNet' => $this->amountNet,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

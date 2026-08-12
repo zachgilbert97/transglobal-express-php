@@ -30,7 +30,7 @@ final class Document implements Arrayable {
             'DownloadURL' => !is_null($this->downloadUrl)
                 ? filter_var($this->downloadUrl, FILTER_SANITIZE_URL)
                 : null,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

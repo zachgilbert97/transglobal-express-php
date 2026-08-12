@@ -39,9 +39,9 @@ class GetQuoteRequest implements Request
      */
     public function body(): array
     {
-        return [
+        return array_filter([
             'Shipment' => $this->shipment->toArray(),
             'Insurance' => $this->insurance->toArray(),
-        ];
+        ], static fn ($value): bool => !is_null($value));
     }
 }

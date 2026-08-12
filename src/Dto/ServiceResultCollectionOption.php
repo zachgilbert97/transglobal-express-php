@@ -32,7 +32,7 @@ final class ServiceResultCollectionOption implements Arrayable
             'CollectionCharge' => $this->collectionCharge,
             'SameDayCollectionCutOffTime' => $this->sameDayCollectionCutOffTime,
             'ExpectedLabel' => $this->expectedLabel?->toArray(),
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

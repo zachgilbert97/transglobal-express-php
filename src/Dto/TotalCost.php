@@ -28,7 +28,7 @@ final class TotalCost implements Arrayable {
             'TotalCostNetWithoutCollection' => $this->totalCostNetWithoutCollection,
             'TotalCostGrossWithCollection' => $this->totalCostGrossWithCollection,
             'TotalCostGrossWithoutCollection' => $this->totalCostGrossWithoutCollection,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

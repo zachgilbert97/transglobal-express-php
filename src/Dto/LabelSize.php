@@ -25,7 +25,7 @@ final class LabelSize implements Arrayable
     {
         return array_filter([
             'Size' => $this->unwrapEnumValue($this->size),
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

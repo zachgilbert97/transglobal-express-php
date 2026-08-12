@@ -61,7 +61,7 @@ final class Address implements Arrayable {
             'IsAddressResidential' => $this->isAddressResidential,
             'EORINumber' => $this->eoriNumber,
             'VATNumber' => $this->vatNumber,
-        ], static fn ($value): bool => $value !== null);
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**

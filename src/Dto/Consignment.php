@@ -39,9 +39,11 @@ final class Consignment implements Arrayable
             'ItemsAreStackable' => $this->itemsAreStackable,
             'ConsignmentSummary' => $this->consignmentSummary,
             'ConsignmentValue' => $this->consignmentValue,
-            'ConsignmentCurrency' => $this->consignmentCurrency->toArray(),
-            'Packages' => $this->packages,
-        ], static fn ($value): bool => $value !== null);
+            'ConsignmentCurrency' => $this->consignmentCurrency?->toArray(),
+            'Packages' => !is_null($this->packages)
+                ? array_map(static fn ($package): array => $package->toArray(), $this->packages)
+                : null,
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**
@@ -63,7 +65,7 @@ final class Consignment implements Arrayable
                 : null,
             packages: isset($data['Packages'])
                 ? array_map(
-                    fn ($package): Package => Package::fromArray($package),
+                    static fn ($package): Package => Package::fromArray($package),
                     $data['Packages'],
                 )
                 : null,

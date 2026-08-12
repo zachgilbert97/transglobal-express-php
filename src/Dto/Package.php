@@ -33,8 +33,10 @@ final class Package implements Arrayable
             'Length' => $this->length,
             'Width' => $this->width,
             'Height' => $this->height,
-            'CommodityDetails' => $this->commodityDetails,
-        ], static fn ($value): bool => $value !== null);
+            'CommodityDetails' => !is_null($this->commodityDetails)
+                ? array_map(static fn ($detail): array => $detail->toArray(), $this->commodityDetails)
+                : null,
+        ], static fn ($value): bool => !is_null($value));
     }
 
     /**
@@ -51,7 +53,7 @@ final class Package implements Arrayable
             height: $data['Height'] ?? null,
             commodityDetails: isset($data['CommodityDetails'])
                 ? array_map(
-                    fn ($commodityLine): CommodityLine => CommodityLine::fromArray($commodityLine),
+                    static fn ($commodityLine): CommodityLine => CommodityLine::fromArray($commodityLine),
                     $data['CommodityDetails'],
                 )
                 : null,
