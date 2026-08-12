@@ -19,6 +19,7 @@ use ZachGilbert\TransglobalExpress\Exceptions\{
     ValidationException,
 };
 use ZachGilbert\TransglobalExpress\Dto\Notification;
+use ZachGilbert\TransglobalExpress\Enums\ResponseStatus;
 use ZachGilbert\TransglobalExpress\Resources\Countries;
 use ZachGilbert\TransglobalExpress\Resources\Quote;
 use ZachGilbert\TransglobalExpress\Resources\Shipment;
@@ -107,7 +108,9 @@ final class Client
 
         $decoded = $this->decodeBody($response);
 
-        if (array_key_exists('Status', $decoded) && $decoded['Status'] === 'FAIL') { // TODO - Enum
+        if (array_key_exists('Status', $decoded)
+            && ResponseStatus::tryFrom($decoded['Status']) === ResponseStatus::FAIL
+        ) {
             $this->throwForBodyStatus($response);
         }
 

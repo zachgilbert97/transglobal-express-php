@@ -7,11 +7,15 @@ use ZachGilbert\TransglobalExpress\Dto\Document;
 use ZachGilbert\TransglobalExpress\Dto\Label;
 use ZachGilbert\TransglobalExpress\Dto\Notification;
 use ZachGilbert\TransglobalExpress\Dto\OrderInvoice;
+use ZachGilbert\TransglobalExpress\Enums\ResponseStatus;
+use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
 
 final class BookShipmentResponse implements Response
 {
+    use UnwrapsEnums;
+
     public function __construct(
-        public readonly ?string $status = null, // TODO - Enum
+        public readonly ResponseStatus|string|null $status = null,
         public readonly ?array $notifications = null,
         public readonly ?string $orderReference = null,
         public readonly ?OrderInvoice $orderInvoice = null,
@@ -21,10 +25,17 @@ final class BookShipmentResponse implements Response
         public readonly ?string $failReference = null,
     ) {}
 
+    /**
+     * @param array $data
+     *
+     * @return static
+     */
     public static function fromArray(array $data): static
     {
         return new self(
-            status: $data['Status'] ?? null,
+            status: isset($data['Status'])
+                ? (ResponseStatus::tryFrom($data['Status']) ?: $data['Status'])
+                : null,
             notifications: isset($data['Notifications'])
                 ? array_map(
                     fn ($notification): Notification => Notification::fromArray($notification),

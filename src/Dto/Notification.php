@@ -10,7 +10,7 @@ final class Notification implements Arrayable {
      * @param string|null $severity
      */
     public function __construct(
-        public readonly ?string $message = null, // TODO - Enum
+        public readonly ?string $message = null,
         public readonly ?string $severity = null,
     ) {}
 

@@ -5,17 +5,17 @@ namespace ZachGilbert\TransglobalExpress\Responses;
 use ZachGilbert\TransglobalExpress\Concerns\Response;
 use ZachGilbert\TransglobalExpress\Dto\Country;
 use ZachGilbert\TransglobalExpress\Dto\Notification;
-use ZachGilbert\TransglobalExpress\Dto\ServiceQuoteResult;
+use ZachGilbert\TransglobalExpress\Enums\ResponseStatus;
 
 final class GetCountriesResponse implements Response
 {
     /**
-     * @param string|null              $status
-     * @param array<Notification>|null $notifications
-     * @param array<Country>|null      $countries
+     * @param ResponseStatus|string|null $status
+     * @param array<Notification>|null   $notifications
+     * @param array<Country>|null        $countries
      */
     public function __construct(
-        public readonly ?string $status = null, // TODO - Enum
+        public readonly ResponseStatus|string|null $status = null,
         public readonly ?array $notifications = null,
         public readonly ?array $countries = null,
     ) {}
@@ -28,7 +28,9 @@ final class GetCountriesResponse implements Response
     public static function fromArray(array $data): static
     {
         return new self(
-            status: $data['Status'] ?? null,
+            status: isset($data['Status'])
+                ? (ResponseStatus::tryFrom($data['Status']) ?? $data['Status'])
+                : null,
             notifications: isset($data['Notifications'])
                 ? array_map(
                     fn ($notification): Notification => Notification::fromArray($notification),
