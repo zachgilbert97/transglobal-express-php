@@ -9,7 +9,7 @@ final class Config
     public function __construct(
         public readonly string $apiKey,
         public readonly string $password,
-        public readonly Environment $environment = Environment::Live,
+        public readonly Environment $environment,
     ) {
     }
 

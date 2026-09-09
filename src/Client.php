@@ -91,6 +91,7 @@ final class Client
         if (!is_null($this->logger)) {
             $this->logger->debug("Transglobal Express {$this->config->environment->value} API request", [
                 'request' => [
+                    'url' => (string) $request->getUri(),
                     'endpoint' => $apiRequest->uri(),
                     'method' => $apiRequest->method(),
                     'body' => $requestBody,
