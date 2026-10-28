@@ -9,12 +9,12 @@ use ZachGilbert\TransglobalExpress\Dto\Shipment;
 class GetQuoteRequest implements Request
 {
     /**
-     * @param Shipment  $shipment
-     * @param Insurance $insurance
+     * @param Shipment       $shipment
+     * @param Insurance|null $insurance Omitted from the request when null
      */
     public function __construct(
         private readonly Shipment $shipment,
-        private readonly Insurance $insurance,
+        private readonly ?Insurance $insurance = null,
     ) {
     }
 
@@ -35,13 +35,13 @@ class GetQuoteRequest implements Request
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function body(): array
     {
         return array_filter([
-            'Shipment' => $this->shipment->toArray(),
-            'Insurance' => $this->insurance->toArray(),
+            'Shipment' => $this->shipment,
+            'Insurance' => $this->insurance,
         ], static fn ($value): bool => !is_null($value));
     }
 }

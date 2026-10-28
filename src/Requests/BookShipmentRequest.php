@@ -34,11 +34,9 @@ class BookShipmentRequest implements Request
      */
     public function body(): array
     {
-        return array_filter([
-            $this->shipment instanceof QuoteSelection
-                ? 'QuoteSelection'
-                : 'Shipment' => $this->shipment->toArray(),
-            'BookDetails' => $this->bookDetails->toArray(),
-        ], static fn ($value): bool => !is_null($value));
+        return [
+            $this->shipment instanceof QuoteSelection ? 'QuoteSelection' : 'Shipment' => $this->shipment,
+            'BookDetails' => $this->bookDetails,
+        ];
     }
 }

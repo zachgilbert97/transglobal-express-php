@@ -3,12 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
 use ZachGilbert\TransglobalExpress\Enums\CPSCDisclaimerType;
 use ZachGilbert\TransglobalExpress\Enums\DeclarationOption;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class CPSCDeclaration implements Arrayable {
-    use UnwrapsEnums;
+final class CPSCDeclaration implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
 
     /**
      * @param DeclarationOption|int|null     $declarationOption
@@ -40,24 +41,24 @@ final class CPSCDeclaration implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'DeclarationOption' => $this->unwrapEnumValue($this->declarationOption),
-            'ProductId' => $this->productId,
+        return [
+            'DeclarationOption' => $this->declarationOption,
+            'ProductID' => $this->productId,
             'CPSCRuleCitation' => $this->cpscRuleCitation,
             'DateOfManufacture' => $this->dateOfManufacture,
             'PlaceOfManufacture' => $this->placeOfManufacture,
             'DateOfMostRecentTest' => $this->dateOfMostRecentTest,
             'TestingLaboratory' => $this->testingLaboratory,
             'RecordsKeeperContact' => $this->recordsKeeperContact,
-            'CertifierId' => $this->certifierId,
-            'VersionId' => $this->versionId,
-            'DisclaimerType' => $this->unwrapEnumValue($this->disclaimerType),
+            'CertifierID' => $this->certifierId,
+            'VersionID' => $this->versionId,
+            'DisclaimerType' => $this->disclaimerType,
             'IntendedUseCode' => $this->intendedUseCode,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**
@@ -71,15 +72,15 @@ final class CPSCDeclaration implements Arrayable {
             declarationOption: isset($data['DeclarationOption'])
                 ? (DeclarationOption::tryFrom($data['DeclarationOption']) ?: $data['DeclarationOption'])
                 : null,
-            productId: $data['ProductId'] ?? null,
+            productId: $data['ProductID'] ?? null,
             cpscRuleCitation: $data['CPSCRuleCitation'] ?? null,
             dateOfManufacture: $data['DateOfManufacture'] ?? null,
             placeOfManufacture: $data['PlaceOfManufacture'] ?? null,
             dateOfMostRecentTest: $data['DateOfMostRecentTest'] ?? null,
             testingLaboratory: $data['TestingLaboratory'] ?? null,
             recordsKeeperContact: $data['RecordsKeeperContact'] ?? null,
-            certifierId: $data['CertifierId'] ?? null,
-            versionId: $data['VersionId'] ?? null,
+            certifierId: $data['CertifierID'] ?? null,
+            versionId: $data['VersionID'] ?? null,
             disclaimerType: isset($data['DisclaimerType'])
                 ? (CPSCDisclaimerType::tryFrom($data['DisclaimerType']) ?: $data['DisclaimerType'])
                 : null,

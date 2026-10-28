@@ -21,7 +21,7 @@ class Countries
      * @return GetCountriesResponse
      * @throws JsonException
      */
-    public function book(): GetCountriesResponse
+    public function get(): GetCountriesResponse
     {
         return GetCountriesResponse::fromArray(
             $this->client->send(new GetCountriesRequest)

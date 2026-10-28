@@ -26,28 +26,39 @@ use ZachGilbert\TransglobalExpress\Resources\Shipment;
 
 final class Client
 {
+    private readonly ?RequestLogger $requestLogger;
+
     /**
      * @param ClientInterface         $http
      * @param RequestFactoryInterface $requestFactory
      * @param Config                  $config
      * @param LoggerInterface|null    $logger
+     * @param LoggingOptions          $loggingOptions
      */
     public function __construct(
         private readonly ClientInterface         $http,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly Config                  $config,
-        private readonly ?LoggerInterface        $logger = null,
+        ?LoggerInterface                         $logger = null,
+        LoggingOptions                           $loggingOptions = new LoggingOptions(),
     ) {
+        $this->requestLogger = !is_null($logger)
+            ? new RequestLogger($logger, $config->environment, $loggingOptions)
+            : null;
     }
 
     /**
      * @param Config               $config
      * @param LoggerInterface|null $logger
+     * @param LoggingOptions       $loggingOptions
      *
      * @return self
      */
-    public static function make(Config $config, ?LoggerInterface $logger = null): self
-    {
+    public static function make(
+        Config $config,
+        ?LoggerInterface $logger = null,
+        LoggingOptions $loggingOptions = new LoggingOptions(),
+    ): self {
         return new self(
             http: new \GuzzleHttp\Client([
                 'base_uri' => $config->baseUri(),
@@ -56,6 +67,7 @@ final class Client
             requestFactory: new HttpFactory(),
             config: $config,
             logger: $logger,
+            loggingOptions: $loggingOptions,
         );
     }
 
@@ -73,35 +85,39 @@ final class Client
             ->withHeader('Content-Type', 'application/json');
 
         $requestBody = json_encode([
-            'Credentials' => (new Credentials($this->config->apiKey, $this->config->password))->toArray(),
+            'Credentials' => new Credentials($this->config->apiKey, $this->config->password),
             ...$apiRequest->body(),
         ], JSON_THROW_ON_ERROR);
 
         $request->getBody()->write($requestBody);
 
+        $requestId = bin2hex(random_bytes(8));
+        $startedAt = hrtime(true);
+
         try {
             $response = $this->http->sendRequest($request);
         } catch (ClientExceptionInterface $exception) {
+            $this->requestLogger?->logNetworkFailure(
+                $apiRequest,
+                $requestBody,
+                $requestId,
+                self::elapsedMilliseconds($startedAt),
+                $exception,
+            );
+
             throw new NetworkException(
                 message: 'Could not connect to API: ' . $exception->getMessage(),
                 previous: $exception,
             );
         }
 
-        if (!is_null($this->logger)) {
-            $this->logger->debug("Transglobal Express {$this->config->environment->value} API request", [
-                'request' => [
-                    'url' => (string) $request->getUri(),
-                    'endpoint' => $apiRequest->uri(),
-                    'method' => $apiRequest->method(),
-                    'body' => $requestBody,
-                ],
-                'response' => [
-                    'status' => $response->getStatusCode(),
-                    'body' => $response->getBody(),
-                ],
-            ]);
-        }
+        $this->requestLogger?->logResponse(
+            $apiRequest,
+            $requestBody,
+            $response,
+            $requestId,
+            self::elapsedMilliseconds($startedAt),
+        );
 
         if ($response->getStatusCode() >= 400) {
             $this->throwForHttpStatus($response);
@@ -116,6 +132,16 @@ final class Client
         }
 
         return $decoded;
+    }
+
+    /**
+     * @param int $startedAt A high-resolution timestamp from hrtime(true)
+     *
+     * @return int
+     */
+    private static function elapsedMilliseconds(int $startedAt): int
+    {
+        return (int) round((hrtime(true) - $startedAt) / 1_000_000);
     }
 
     /**
@@ -174,7 +200,7 @@ final class Client
             $body = ['raw_body' => $raw];
         }
 
-        $message = $body['message'] ?? "API request failed with status {$status}";
+        $message = $body['Message'] ?? "API request failed with status {$status}";
 
         if ($status === 405) {
             $body['allowed_methods'] = array_map(

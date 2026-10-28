@@ -19,13 +19,13 @@ class Quote
     }
 
     /**
-     * @param Shipment  $shipment
-     * @param Insurance $insurance
+     * @param Shipment       $shipment
+     * @param Insurance|null $insurance
      *
      * @return GetQuoteResponse
      * @throws JsonException
      */
-    public function get(Shipment $shipment, Insurance $insurance): GetQuoteResponse
+    public function get(Shipment $shipment, ?Insurance $insurance = null): GetQuoteResponse
     {
         return GetQuoteResponse::fromArray(
             $this->client->send(new GetQuoteRequest($shipment, $insurance))

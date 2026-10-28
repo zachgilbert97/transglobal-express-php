@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Address implements Arrayable {
+final class Address implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param string|null  $forename
      * @param string|null  $surname
@@ -19,7 +23,7 @@ final class Address implements Arrayable {
      * @param string|null  $postcode
      * @param Country|null $country
      * @param bool|null    $isAddressResidential
-     * @param bool|null    $eoriNumber
+     * @param string|null  $eoriNumber
      * @param string|null  $vatNumber
      */
     public function __construct(
@@ -36,16 +40,16 @@ final class Address implements Arrayable {
         readonly public ?string $postcode = null,
         readonly public ?Country $country = null,
         readonly public ?bool $isAddressResidential = null,
-        readonly public ?bool $eoriNumber = null,
+        readonly public ?string $eoriNumber = null,
         readonly public ?string $vatNumber = null,
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'Forename' => $this->forename,
             'Surname' => $this->surname,
             'EmailAddress' => $this->emailAddress,
@@ -57,11 +61,11 @@ final class Address implements Arrayable {
             'City' => $this->city,
             'County' => $this->county,
             'Postcode' => $this->postcode,
-            'Country' => $this->country?->toArray(),
+            'Country' => $this->country,
             'IsAddressResidential' => $this->isAddressResidential,
             'EORINumber' => $this->eoriNumber,
             'VATNumber' => $this->vatNumber,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**

@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Insurance implements Arrayable {
+final class Insurance implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param float|null $coverValue
      * @param float|null $excessValue
@@ -19,16 +23,16 @@ final class Insurance implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'coverValue' => $this->coverValue,
-            'excessValue' => $this->excessValue,
-            'goodsAreNew' => $this->goodsAreNew,
-            'goodsAreFragile' => $this->goodsAreFragile,
-        ], static fn ($value): bool => !is_null($value));
+        return [
+            'CoverValue' => $this->coverValue,
+            'ExcessValue' => $this->excessValue,
+            'GoodsAreNew' => $this->goodsAreNew,
+            'GoodsAreFragile' => $this->goodsAreFragile,
+        ];
     }
 
     /**
@@ -39,10 +43,10 @@ final class Insurance implements Arrayable {
     public static function fromArray(array $data): static
     {
         return new self(
-            coverValue: $data['coverValue'] ?? null,
-            excessValue: $data['excessValue'] ?? null,
-            goodsAreNew: $data['goodsAreNew'] ?? null,
-            goodsAreFragile: $data['goodsAreFragile'] ?? null,
+            coverValue: $data['CoverValue'] ?? null,
+            excessValue: $data['ExcessValue'] ?? null,
+            goodsAreNew: $data['GoodsAreNew'] ?? null,
+            goodsAreFragile: $data['GoodsAreFragile'] ?? null,
         );
     }
 }

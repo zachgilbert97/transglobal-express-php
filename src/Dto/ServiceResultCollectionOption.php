@@ -3,9 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class ServiceResultCollectionOption implements Arrayable
+final class ServiceResultCollectionOption implements Arrayable, HasSerializableProperties
 {
+    use SerializesProperties;
+
     /**
      * @param int|null           $collectionOptionId
      * @param string|null        $collectionOptionTitle
@@ -22,17 +26,17 @@ final class ServiceResultCollectionOption implements Arrayable
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'CollectionOptionID' => $this->collectionOptionId,
             'CollectionOptionTitle' => $this->collectionOptionTitle,
             'CollectionCharge' => $this->collectionCharge,
             'SameDayCollectionCutOffTime' => $this->sameDayCollectionCutOffTime,
-            'ExpectedLabel' => $this->expectedLabel?->toArray(),
-        ], static fn ($value): bool => !is_null($value));
+            'ExpectedLabel' => $this->expectedLabel,
+        ];
     }
 
     /**

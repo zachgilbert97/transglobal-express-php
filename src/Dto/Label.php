@@ -3,11 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
 use ZachGilbert\TransglobalExpress\Enums\LabelSize as LabelSizeEnum;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Label implements Arrayable {
-    use UnwrapsEnums;
+final class Label implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
 
     /**
      * @param string|null               $labelRole
@@ -31,20 +32,20 @@ final class Label implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'LabelRole' => $this->labelRole,
             'LabelFormat' => $this->labelFormat,
-            'LabelSize' => $this->unwrapEnumValue($this->labelSize),
+            'LabelSize' => $this->labelSize,
             'AirWaybillReference' => $this->airWaybillReference,
             'LabelContent' => $this->labelContent,
             'DownloadURL' => !is_null($this->downloadUrl) ? filter_var($this->downloadUrl, FILTER_SANITIZE_URL) : null,
             'CarrierName' => $this->carrierName,
             'ServiceName' => $this->serviceName,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**

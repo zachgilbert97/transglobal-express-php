@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class QuoteSelection implements Arrayable {
+final class QuoteSelection implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param int|null $quoteId
      */
@@ -13,13 +17,13 @@ final class QuoteSelection implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'QuoteId' => $this->quoteId,
-        ], static fn ($value): bool => !is_null($value));
+        return [
+            'QuoteID' => $this->quoteId,
+        ];
     }
 
     /**
@@ -30,7 +34,7 @@ final class QuoteSelection implements Arrayable {
     public static function fromArray(array $data): static
     {
         return new self(
-            quoteId: $data['QuoteId'] ?? null,
+            quoteId: $data['QuoteID'] ?? null,
         );
     }
 }

@@ -3,12 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
 use ZachGilbert\TransglobalExpress\Enums\Currency;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class ConsignmentCurrency implements Arrayable
+final class ConsignmentCurrency implements Arrayable, HasSerializableProperties
 {
-    use UnwrapsEnums;
+    use SerializesProperties;
 
     /**
      * @param Currency|string|null $currencyCode
@@ -20,13 +21,13 @@ final class ConsignmentCurrency implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'CurrencyCode' => $this->unwrapEnumValue($this->currencyCode),
-        ], static fn($value): bool => $value !== null);
+        return [
+            'CurrencyCode' => $this->currencyCode,
+        ];
     }
 
     /**

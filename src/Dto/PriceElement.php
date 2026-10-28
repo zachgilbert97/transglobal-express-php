@@ -3,9 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class PriceElement implements Arrayable
+final class PriceElement implements Arrayable, HasSerializableProperties
 {
+    use SerializesProperties;
+
     /**
      * @param string|null $code
      * @param string|null $description
@@ -20,15 +24,15 @@ final class PriceElement implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'Code' => $this->code,
             'Description' => $this->description,
             'Cost' => $this->cost,
-        ], static fn($value): bool => $value !== null);
+        ];
     }
 
     /**

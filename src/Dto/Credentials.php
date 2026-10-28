@@ -3,9 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Credentials implements Arrayable
+final class Credentials implements Arrayable, HasSerializableProperties
 {
+    use SerializesProperties;
+
     /**
      * @param string $apiKey
      * @param string $password
@@ -18,9 +22,9 @@ final class Credentials implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
         return [
             'APIKey' => $this->apiKey,

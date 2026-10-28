@@ -7,7 +7,7 @@ use ZachGilbert\TransglobalExpress\Dto\Notification;
 use ZachGilbert\TransglobalExpress\Dto\ServiceQuoteResult;
 use ZachGilbert\TransglobalExpress\Enums\ResponseStatus;
 
-final class GetQuoteResponse implements Response
+final readonly class GetQuoteResponse implements Response
 {
     /**
      * @param ResponseStatus|string|null     $status
@@ -16,10 +16,10 @@ final class GetQuoteResponse implements Response
      * @param array<ServiceQuoteResult>|null $serviceResults
      */
     public function __construct(
-        public readonly ResponseStatus|string|null $status = null,
-        public readonly ?array $notifications = null,
-        public readonly ?int $quoteId = null,
-        public readonly ?array $serviceResults = null,
+        public ResponseStatus|string|null $status = null,
+        public ?array                     $notifications = null,
+        public ?int                       $quoteId = null,
+        public ?array                     $serviceResults = null,
     ) {}
 
     /**

@@ -3,12 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
 use ZachGilbert\TransglobalExpress\Enums\LabelSize as LabelSizeEnum;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class LabelSize implements Arrayable
+final class LabelSize implements Arrayable, HasSerializableProperties
 {
-    use UnwrapsEnums;
+    use SerializesProperties;
 
     /**
      * @param LabelSizeEnum|string|null $size
@@ -19,13 +20,13 @@ final class LabelSize implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'Size' => $this->unwrapEnumValue($this->size),
-        ], static fn ($value): bool => !is_null($value));
+        return [
+            'Size' => $this->size,
+        ];
     }
 
     /**

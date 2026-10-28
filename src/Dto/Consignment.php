@@ -3,12 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
 use ZachGilbert\TransglobalExpress\Enums\ItemType;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Consignment implements Arrayable
+final class Consignment implements Arrayable, HasSerializableProperties
 {
-    use UnwrapsEnums;
+    use SerializesProperties;
 
     /**
      * @param ItemType|string|null     $itemType
@@ -30,20 +31,18 @@ final class Consignment implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'ItemType' => $this->unwrapEnumValue($this->itemType),
+        return [
+            'ItemType' => $this->itemType,
             'ItemsAreStackable' => $this->itemsAreStackable,
             'ConsignmentSummary' => $this->consignmentSummary,
             'ConsignmentValue' => $this->consignmentValue,
-            'ConsignmentCurrency' => $this->consignmentCurrency?->toArray(),
-            'Packages' => !is_null($this->packages)
-                ? array_map(static fn ($package): array => $package->toArray(), $this->packages)
-                : null,
-        ], static fn ($value): bool => !is_null($value));
+            'ConsignmentCurrency' => $this->consignmentCurrency,
+            'Packages' => $this->packages,
+        ];
     }
 
     /**

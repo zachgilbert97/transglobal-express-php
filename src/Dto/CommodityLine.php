@@ -3,9 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class CommodityLine implements Arrayable
+final class CommodityLine implements Arrayable, HasSerializableProperties
 {
+    use SerializesProperties;
+
     /**
      * @param string|null          $commodityCode
      * @param string|null          $commodityDescription
@@ -15,7 +19,8 @@ final class CommodityLine implements Arrayable
      * @param float|null           $unitWeight
      * @param string|null          $productCode
      * @param Address|null         $manufacturerAddress
-     * @param CPSCDeclaration|null $cpscDeclaration
+     * @param CPSCDeclaration|null    $cpscDeclaration
+     * @param ProductIdentifiers|null $productIdentifiers Required for B2C shipments to the EU under €150
      */
     public function __construct(
         readonly public ?string $commodityCode = null,
@@ -27,26 +32,28 @@ final class CommodityLine implements Arrayable
         readonly public ?string $productCode = null,
         readonly public ?Address $manufacturerAddress = null,
         readonly public ?CPSCDeclaration $cpscDeclaration = null,
+        readonly public ?ProductIdentifiers $productIdentifiers = null,
     )
     {
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'CommodityCode' => $this->commodityCode,
             'CommodityDescription' => $this->commodityDescription,
-            'CountryOfOrigin' => $this->countryOfOrigin?->toArray(),
+            'CountryOfOrigin' => $this->countryOfOrigin,
             'NumberOfUnits' => $this->numberOfUnits,
             'UnitValue' => $this->unitValue,
             'UnitWeight' => $this->unitWeight,
             'ProductCode' => $this->productCode,
-            'ManufacturerAddress' => $this->manufacturerAddress?->toArray(),
-            'CpscDeclaration' => $this->cpscDeclaration?->toArray(),
-        ], static fn ($value): bool => !is_null($value));
+            'ManufacturerAddress' => $this->manufacturerAddress,
+            'CpscDeclaration' => $this->cpscDeclaration,
+            'ProductIdentifiers' => $this->productIdentifiers,
+        ];
     }
 
     /**
@@ -66,6 +73,9 @@ final class CommodityLine implements Arrayable
             productCode: $data['ProductCode'] ?? null,
             manufacturerAddress: isset($data['ManufacturerAddress']) ? Address::fromArray($data['ManufacturerAddress']) : null,
             cpscDeclaration: isset($data['CpscDeclaration']) ? CPSCDeclaration::fromArray($data['CpscDeclaration']) : null,
+            productIdentifiers: isset($data['ProductIdentifiers'])
+                ? ProductIdentifiers::fromArray($data['ProductIdentifiers'])
+                : null,
         );
     }
 }

@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Notification implements Arrayable {
+final class Notification implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param string|null $message
      * @param string|null $severity
@@ -15,14 +19,14 @@ final class Notification implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'Message' => $this->message,
             'Severity' => $this->severity,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**

@@ -2,17 +2,15 @@
 
 namespace ZachGilbert\TransglobalExpress\Requests;
 
+use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
 use ZachGilbert\TransglobalExpress\Concerns\Request;
 use ZachGilbert\TransglobalExpress\Dto\Address;
 use ZachGilbert\TransglobalExpress\Dto\Consignment;
 use ZachGilbert\TransglobalExpress\Dto\Package;
 use ZachGilbert\TransglobalExpress\Dto\Shipment;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
 
 class GetQuoteMinimalRequest implements Request
 {
-    use UnwrapsEnums;
-
     /**
      * @param Shipment $shipment
      */
@@ -38,71 +36,83 @@ class GetQuoteMinimalRequest implements Request
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function body(): array
     {
         return [
-            'Shipment' => array_filter([
-                'Consignment' => $this->shipment->consignment
-                    ? $this->minimalConsignmentArray($this->shipment->consignment)
-                    : null,
-
-                'CollectionAddress' => $this->shipment->collectionAddress
-                    ? $this->minimalAddressArray($this->shipment->collectionAddress)
-                    : null,
-
-                'DeliveryAddress' => $this->shipment->deliveryAddress
-                    ? $this->minimalAddressArray($this->shipment->deliveryAddress)
-                    : null,
-            ]),
+            'Shipment' => new Shipment(
+                consignment: $this->minimalConsignment($this->shipment->consignment),
+                collectionAddress: $this->minimalAddress($this->shipment->collectionAddress),
+                deliveryAddress: $this->minimalAddress($this->shipment->deliveryAddress),
+            ),
         ];
     }
 
     /**
-     * @param Consignment $consignment
+     * @param Consignment|null $consignment
      *
-     * @return array|null
+     * @return Consignment|null Null when the consignment has none of the minimal fields, so it is omitted
      */
-    private function minimalConsignmentArray(Consignment $consignment): ?array
+    private function minimalConsignment(?Consignment $consignment): ?Consignment
     {
-        return array_filter([
-            'ItemType' => $this->unwrapEnumValue($consignment->itemType),
-            'Packages' => $consignment->packages
+        if (is_null($consignment)) {
+            return null;
+        }
+
+        return $this->nullIfEmpty(new Consignment(
+            itemType: $consignment->itemType,
+            packages: !empty($consignment->packages)
                 ? array_map(
-                    fn (Package $package) => $this->minimalPackageArray($package),
+                    fn (Package $package): Package => $this->minimalPackage($package),
                     $consignment->packages,
                 )
                 : null,
-        ], static fn ($value): bool => !is_null($value));
+        ));
     }
 
     /**
      * @param Package $package
      *
-     * @return array|null
+     * @return Package
      */
-    private function minimalPackageArray(Package $package): ?array
+    private function minimalPackage(Package $package): Package
     {
-        return array_filter([
-            'Weight' => $package->weight,
-            'Length' => $package->length,
-            'Width'  => $package->width,
-            'Height' => $package->height,
-        ], static fn ($value): bool => !is_null($value));
+        return new Package(
+            weight: $package->weight,
+            length: $package->length,
+            width: $package->width,
+            height: $package->height,
+        );
     }
 
     /**
-     * @param Address $address
+     * @param Address|null $address
      *
-     * @return array|null
+     * @return Address|null Null when the address has none of the minimal fields, so it is omitted
      */
-    private function minimalAddressArray(Address $address): ?array
+    private function minimalAddress(?Address $address): ?Address
     {
-        return array_filter([
-            'City' => $address->city,
-            'Postcode' => $address->postcode,
-            'Country' => $address->country?->toArray(),
-        ], static fn ($value): bool => !is_null($value));
+        if (is_null($address)) {
+            return null;
+        }
+
+        return $this->nullIfEmpty(new Address(
+            city: $address->city,
+            postcode: $address->postcode,
+            country: $address->country,
+        ));
+    }
+
+    /**
+     * @template T of Arrayable
+     *
+     * @param T $dto
+     *
+     * @return T|null
+     */
+    private function nullIfEmpty(Arrayable $dto): ?Arrayable
+    {
+        return $dto->toArray() === [] ? null : $dto;
     }
 }

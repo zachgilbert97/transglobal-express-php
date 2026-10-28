@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Document implements Arrayable {
+final class Document implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param string|null $documentType
      * @param string|null $format
@@ -19,18 +23,18 @@ final class Document implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'DocumentType' => $this->documentType,
             'Format' => $this->format,
             'Content' => $this->content,
             'DownloadURL' => !is_null($this->downloadUrl)
                 ? filter_var($this->downloadUrl, FILTER_SANITIZE_URL)
                 : null,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**

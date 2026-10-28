@@ -1,5 +1,12 @@
 /vendor
+/.phpunit.cache
 /.idea
 .env
 .git
 .github
+
+# AI Agents and Cache Files
+.claude/settings.local.json
+.claude/cache/
+.claude/worktrees/
+.claude/*.lock

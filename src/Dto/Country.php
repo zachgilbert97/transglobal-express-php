@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Country implements Arrayable {
+final class Country implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param int|null    $countryId
      * @param string|null $title
@@ -17,15 +21,15 @@ final class Country implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'CountryId' => $this->countryId,
+        return [
+            'CountryID' => $this->countryId,
             'Title' => $this->title,
             'CountryCode' => $this->countryCode,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**
@@ -36,7 +40,7 @@ final class Country implements Arrayable {
     public static function fromArray(array $data): static
     {
         return new self(
-            countryId: $data['CountryId'] ?? null,
+            countryId: $data['CountryID'] ?? null,
             title: $data['Title'] ?? null,
             countryCode: $data['CountryCode'] ?? null,
         );

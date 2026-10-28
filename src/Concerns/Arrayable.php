@@ -2,7 +2,9 @@
 
 namespace ZachGilbert\TransglobalExpress\Concerns;
 
-interface Arrayable
+use JsonSerializable;
+
+interface Arrayable extends JsonSerializable
 {
     /**
      * @return array

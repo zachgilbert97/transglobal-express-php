@@ -3,13 +3,14 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
 use ZachGilbert\TransglobalExpress\Enums\LabelGenerateStatus;
 use ZachGilbert\TransglobalExpress\Enums\LabelRole;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class ExpectedLabel implements Arrayable
+final class ExpectedLabel implements Arrayable, HasSerializableProperties
 {
-    use UnwrapsEnums;
+    use SerializesProperties;
 
     /**
      * @param LabelRole|string|null           $labelRole
@@ -27,18 +28,16 @@ final class ExpectedLabel implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'LabelRole' => $this->unwrapEnumValue($this->labelRole),
+        return [
+            'LabelRole' => $this->labelRole,
             'LabelFormat' => $this->labelFormat,
-            'LabelGenerateStatus' => $this->unwrapEnumValue($this->labelGenerateStatus),
-            'AvailableSizes' => !is_null($this->availableSizes)
-                ? array_map(static fn ($size): array => $size->toArray(), $this->availableSizes)
-                : null,
-        ], static fn($value): bool => $value !== null);
+            'LabelGenerateStatus' => $this->labelGenerateStatus,
+            'AvailableSizes' => $this->availableSizes,
+        ];
     }
 
     /**

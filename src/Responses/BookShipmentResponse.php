@@ -8,21 +8,18 @@ use ZachGilbert\TransglobalExpress\Dto\Label;
 use ZachGilbert\TransglobalExpress\Dto\Notification;
 use ZachGilbert\TransglobalExpress\Dto\OrderInvoice;
 use ZachGilbert\TransglobalExpress\Enums\ResponseStatus;
-use ZachGilbert\TransglobalExpress\Traits\UnwrapsEnums;
 
-final class BookShipmentResponse implements Response
+final readonly class BookShipmentResponse implements Response
 {
-    use UnwrapsEnums;
-
     public function __construct(
-        public readonly ResponseStatus|string|null $status = null,
-        public readonly ?array $notifications = null,
-        public readonly ?string $orderReference = null,
-        public readonly ?OrderInvoice $orderInvoice = null,
-        public readonly ?array $labels = null,
-        public readonly ?array $documents = null,
-        public readonly ?string $trackingUrl = null,
-        public readonly ?string $failReference = null,
+        public ResponseStatus|string|null $status = null,
+        public ?array                     $notifications = null,
+        public ?string                    $orderReference = null,
+        public ?OrderInvoice              $orderInvoice = null,
+        public ?array                     $labels = null,
+        public ?array                     $documents = null,
+        public ?string                    $trackingUrl = null,
+        public ?string                    $failReference = null,
     ) {}
 
     /**

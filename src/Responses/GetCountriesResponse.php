@@ -7,7 +7,7 @@ use ZachGilbert\TransglobalExpress\Dto\Country;
 use ZachGilbert\TransglobalExpress\Dto\Notification;
 use ZachGilbert\TransglobalExpress\Enums\ResponseStatus;
 
-final class GetCountriesResponse implements Response
+final readonly class GetCountriesResponse implements Response
 {
     /**
      * @param ResponseStatus|string|null $status
@@ -15,9 +15,9 @@ final class GetCountriesResponse implements Response
      * @param array<Country>|null        $countries
      */
     public function __construct(
-        public readonly ResponseStatus|string|null $status = null,
-        public readonly ?array $notifications = null,
-        public readonly ?array $countries = null,
+        public ResponseStatus|string|null $status = null,
+        public ?array                     $notifications = null,
+        public ?array                     $countries = null,
     ) {}
 
     /**

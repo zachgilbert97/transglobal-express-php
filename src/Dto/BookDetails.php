@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class BookDetails implements Arrayable {
+final class BookDetails implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param int|null                  $serviceId
      * @param string|null               $yourReference
@@ -29,23 +33,21 @@ final class BookDetails implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'ServiceId' => $this->serviceId,
+        return [
+            'ServiceID' => $this->serviceId,
             'YourReference' => $this->yourReference,
             'IOSSNumber' => $this->iossNumber,
             'IncludePreferredOriginNoticeOnPackingList' => $this->includePreferredOriginNoticeOnPackingList,
             'ShippingCharges' => $this->shippingCharges,
             'DeliveryInstructions' => $this->deliveryInstructions,
-            'Collection' => $this->collection?->toArray(),
-            'BookAccessories' => !is_null($this->bookAccessories)
-                ? array_map(static fn ($accessory): array => $accessory->toArray(), $this->bookAccessories)
-                : null,
-            'Insurance' => $this->insurance?->toArray(),
-        ], static fn ($value): bool => !is_null($value));
+            'Collection' => $this->collection,
+            'BookAccessories' => $this->bookAccessories,
+            'Insurance' => $this->insurance,
+        ];
     }
 
     /**
@@ -56,7 +58,7 @@ final class BookDetails implements Arrayable {
     public static function fromArray(array $data): static
     {
         return new self(
-            serviceId: $data['ServiceId'] ?? null,
+            serviceId: $data['ServiceID'] ?? null,
             yourReference: $data['YourReference'] ?? null,
             iossNumber: $data['IOSSNumber'] ?? null,
             includePreferredOriginNoticeOnPackingList: $data['IncludePreferredOriginNoticeOnPackingList'] ?? null,

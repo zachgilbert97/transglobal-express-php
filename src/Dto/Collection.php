@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Collection implements Arrayable {
+final class Collection implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param string|null $collectionDate The collection date. Y-m-d, e.g. 2020-12-31
      * @param string|null $readyFrom The time from which the consignment will be ready or collection. H:m, e.g. 12:30
@@ -17,15 +21,15 @@ final class Collection implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'CollectionDate' => $this->collectionDate,
             'ReadyFrom' => $this->readyFrom,
             'CollectionOptionID' => $this->collectionOptionId,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**

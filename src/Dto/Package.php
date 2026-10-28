@@ -3,9 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Package implements Arrayable
+final class Package implements Arrayable, HasSerializableProperties
 {
+    use SerializesProperties;
+
     /**
      * @param float|null           $weight
      * @param float|null           $length
@@ -24,19 +28,17 @@ final class Package implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'Weight' => $this->weight,
             'Length' => $this->length,
             'Width' => $this->width,
             'Height' => $this->height,
-            'CommodityDetails' => !is_null($this->commodityDetails)
-                ? array_map(static fn ($detail): array => $detail->toArray(), $this->commodityDetails)
-                : null,
-        ], static fn ($value): bool => !is_null($value));
+            'CommodityDetails' => $this->commodityDetails,
+        ];
     }
 
     /**

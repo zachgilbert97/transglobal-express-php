@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class TotalCost implements Arrayable {
+final class TotalCost implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param float|null $totalCostNetWithCollection
      * @param float|null $totalCostNetWithoutCollection
@@ -19,16 +23,16 @@ final class TotalCost implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'TotalCostNetWithCollection' => $this->totalCostNetWithCollection,
             'TotalCostNetWithoutCollection' => $this->totalCostNetWithoutCollection,
             'TotalCostGrossWithCollection' => $this->totalCostGrossWithCollection,
             'TotalCostGrossWithoutCollection' => $this->totalCostGrossWithoutCollection,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**

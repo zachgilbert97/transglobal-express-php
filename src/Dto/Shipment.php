@@ -3,9 +3,13 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class Shipment implements Arrayable
+final class Shipment implements Arrayable, HasSerializableProperties
 {
+    use SerializesProperties;
+
     /**
      * @param Consignment|null $consignment
      * @param Address|null     $collectionAddress
@@ -24,17 +28,17 @@ final class Shipment implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
-            'Consignment' => $this->consignment?->toArray(),
-            'CollectionAddress' => $this->collectionAddress?->toArray(),
-            'DeliveryAddress' => $this->deliveryAddress?->toArray(),
-            'ExporterAddress' => $this->exporterAddress?->toArray(),
-            'ImporterAddress' => $this->importerAddress?->toArray(),
-        ], static fn($value): bool => $value !== null);
+        return [
+            'Consignment' => $this->consignment,
+            'CollectionAddress' => $this->collectionAddress,
+            'DeliveryAddress' => $this->deliveryAddress,
+            'ExporterAddress' => $this->exporterAddress,
+            'ImporterAddress' => $this->importerAddress,
+        ];
     }
 
     /**

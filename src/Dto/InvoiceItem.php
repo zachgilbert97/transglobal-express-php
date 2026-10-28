@@ -3,8 +3,12 @@
 namespace ZachGilbert\TransglobalExpress\Dto;
 
 use ZachGilbert\TransglobalExpress\Concerns\Arrayable;
+use ZachGilbert\TransglobalExpress\Concerns\HasSerializableProperties;
+use ZachGilbert\TransglobalExpress\Traits\SerializesProperties;
 
-final class InvoiceItem implements Arrayable {
+final class InvoiceItem implements Arrayable, HasSerializableProperties {
+    use SerializesProperties;
+
     /**
      * @param string|null $itemDescription
      * @param float|null  $amountNet
@@ -15,14 +19,14 @@ final class InvoiceItem implements Arrayable {
     ) {}
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function properties(): array
     {
-        return array_filter([
+        return [
             'ItemDescription' => $this->itemDescription,
             'AmountNet' => $this->amountNet,
-        ], static fn ($value): bool => !is_null($value));
+        ];
     }
 
     /**
